@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔺 Similar Triangles (AA, SSS, SAS) - رياضيات 11 عام | Mr. Mohammed Hesham</title>
+<meta name="description" content="امتحان تفاعلي عن تحديد المثلثات المتشابهة بمسلّمة AA ونظريتي SSS و SAS - رياضيات صف 11 عام">
+<meta name="author" content="Mr. Mohammed Hesham">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+body.en-mode { font-family: 'Inter', sans-serif; direction: ltr; }
+.arabic-math { font-family: 'Amiri', 'Cairo', serif; }
+.correct { background-color: #dcfce7 !important; border-color: #16a34a !important; }
+.incorrect { background-color: #fee2e2 !important; border-color: #dc2626 !important; }
+.timer-warning { color: #dc2626 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.7; } }
+@media print { .no-print { display: none !important; } }
+.success-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.875rem; }
+.grade-excellent { background: #dcfce7; color: #166534; }
+.grade-good { background: #fef3c7; color: #92400e; }
+.grade-pass { background: #dbeafe; color: #1e40af; }
+.grade-fail { background: #fee2e2; color: #991b1b; }
+.lang-switch { position: fixed; top: 16px; left: 16px; z-index: 100; background: white; padding: 6px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; gap: 4px; border: 2px solid #1d4ed8; }
+body.en-mode .lang-switch { left: auto; right: 16px; }
+.lang-btn { padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; border: none; font-size: 0.875rem; background: transparent; color: #6b7280; }
+.lang-btn.active { background: #1d4ed8; color: white; }
+.shuffle-badge { display: inline-block; background: linear-gradient(135deg, #1d4ed8, #1e40af); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-right: 8px; }
+body.en-mode .shuffle-badge { margin-right: 0; margin-left: 8px; }
+.math-display { display: inline-block; direction: ltr; font-family: 'Amiri', serif; font-size: 1.15em; padding: 2px 8px; background: #dbeafe; border-radius: 4px; margin: 2px; color: #1e40af; font-weight: 700; }
+.save-indicator { position: fixed; bottom: 20px; left: 20px; z-index: 200; background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+body.en-mode .save-indicator { left: auto; right: 20px; }
+.save-indicator.show { opacity: 1; }
+.formula-box { background: #dbeafe; border: 2px solid #1d4ed8; border-radius: 8px; padding: 12px; margin: 10px 0; text-align: center; }
+.svg-graph { display: block; margin: 12px auto; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 8px; max-width: 100%; }
+.graph-container { text-align: center; margin: 10px 0; }
+.module-badge { display: inline-block; padding: 4px 16px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-bottom: 8px; }
+.module-1 { background: #dbeafe; color: #1e40af; }
+.module-2 { background: #fce7f3; color: #9f1239; }
+.module-3 { background: #ecfdf5; color: #065f46; }
+.module-4 { background: #fef3c7; color: #92400e; }
+.module-5 { background: #ede9fe; color: #5b21b6; }
+.module-6 { background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+<div class="lang-switch no-print">
+<button class="lang-btn active" onclick="setLanguage('ar')" id="btn-ar">عربي</button>
+<button class="lang-btn" onclick="setLanguage('en)" id="btn-en">EN</button>
+</div>
+
+<div id="saveIndicator" class="save-indicator">💾 <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></div>
+
+<div id="timer-container" class="max-w-5xl mx-auto mb-4 text-center no-print">
+<div class="bg-white p-4 rounded-2xl shadow-lg inline-block border-2 border-blue-100">
+<span class="text-gray-600 ml-2">⏰ <span data-ar="الوقت المتبقي:" data-en="Time Left:">الوقت المتبقي:</span></span>
+<span id="timer" class="text-2xl font-bold text-blue-700 font-mono">45:00</span>
+<span class="shuffle-badge">🔺 <span data-ar="تشابه المثلثات" data-en="Similar Triangles">تشابه المثلثات</span> - 30 <span data-ar="سؤال" data-en="Questions">سؤال</span></span>
+</div>
+</div>
+
+<div class="max-w-5xl mx-auto mb-6 flex flex-wrap gap-3 justify-center no-print">
+<button onclick="toggleAnswers()" class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-2 rounded-xl font-medium transition shadow">👀 <span data-ar="إظهار/إخفاء الإجابات" data-en="Show/Hide Answers">إظهار/إخفاء الإجابات</span></button>
+<button onclick="window.print()" class="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-medium transition shadow">🖨️ <span data-ar="طباعة" data-en="Print">طباعة</span></button>
+<button onclick="reshuffleExam()" class="bg-gradient-to-r from-blue-700 to-indigo-600 hover:from-blue-800 hover:to-indigo-700 text-white px-5 py-2 rounded-xl font-medium transition shadow">🔄 <span data-ar="أسئلة جديدة" data-en="New Questions">أسئلة جديدة</span></button>
+<button onclick="clearProgress()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow">🗑️ <span data-ar="مسح التقدم" data-en="Clear Progress">مسح التقدم</span></button>
+</div>
+
+<header class="max-w-5xl mx-auto bg-white p-8 rounded-3xl shadow-2xl mb-8 border-4 border-blue-500">
+<div class="text-center">
+<div class="inline-block bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-bold mb-4">MATH GRADE 11 GENERAL - QUESTION 3</div>
+<h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">🔺 <span data-ar="تحديد المثلثات المتشابهة بمسلّمة AA" data-en="Identifying Similar Triangles by AA Postulate">تحديد المثلثات المتشابهة بمسلّمة AA</span></h1>
+<h2 class="text-xl text-blue-700 font-semibold mb-2"><span data-ar="الوحدة 1 - الدرس 1-3: المثلثات المتشابهة | ص 26" data-en="Unit 1 - Lesson 1-3: Similar Triangles | Page 26">الوحدة 1 - الدرس 1-3: المثلثات المتشابهة | ص 26</span></h2>
+<p class="text-gray-600 mb-4"><span data-ar="مسلّمة AA ونظريتا SSS و SAS لتشابه المثلثات" data-en="AA Postulate and SSS & SAS Similarity Theorems">مسلّمة AA ونظريتا SSS و SAS لتشابه المثلثات</span></p>
+<p class="text-sm text-green-600 font-semibold">💾 <span data-ar="يتم حفظ تقدمك تلقائياً - 30 سؤالاً في 6 أقسام" data-en="Auto-saved - 30 questions in 6 sections">يتم حفظ تقدمك تلقائياً - 30 سؤالاً في 6 أقسام</span></p>
+</div>
+<div class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+<span>📅 <span data-ar="التاريخ:" data-en="Date:">التاريخ:</span> <input type="text" id="examDate" class="border-b-2 border-blue-300 bg-transparent w-32 text-center"></span>
+<span>😊 <span data-ar="الاسم:" data-en="Name:">الاسم:</span> <input type="text" id="studentName" class="border-b-2 border-blue-300 bg-transparent w-40 text-center" data-placeholder-ar="اكتب اسمك" data-placeholder-en="Your name" placeholder="اكتب اسمك"></span>
+<span>🏫 <span data-ar="الشعبة:" data-en="Class:">الشعبة:</span> <input type="text" id="studentClass" class="border-b-2 border-blue-300 bg-transparent w-32 text-center" data-placeholder-ar="الشعبة" data-placeholder-en="Class" placeholder="الشعبة"></span>
+<span>⏰ <span data-ar="المدة: 45 دقيقة" data-en="Duration: 45 min">المدة: 45 دقيقة</span></span>
+<span>📊 <span data-ar="المجموع: 100 درجة" data-en="Total: 100 points">المجموع: 100 درجة</span></span>
+</div>
+</header>
+
+<div class="max-w-5xl mx-auto mb-6 bg-white p-4 rounded-xl shadow-lg border-2 border-blue-200 no-print">
+<h3 class="font-bold text-lg mb-3 text-blue-800 text-center">🔺 <span data-ar="طرق إثبات تشابه المثلثات" data-en="Triangle Similarity Criteria">طرق إثبات تشابه المثلثات</span></h3>
+<div class="grid md:grid-cols-3 gap-3 text-sm">
+<div class="formula-box">
+<strong><span data-ar="مسلّمة التشابه AA:" data-en="AA Similarity Postulate:">مسلّمة التشابه AA:</span></strong><br>
+<span data-ar="زاويتان متطابقتان ⇒ تشابه" data-en="Two congruent angles ⇒ similar">زاويتان متطابقتان ⇒ تشابه</span><br>
+<span class="math-display">∠X ≅ ∠A , ∠Y ≅ ∠B</span>
+</div>
+<div class="formula-box">
+<strong><span data-ar="نظرية التشابه SSS:" data-en="SSS Similarity Theorem:">نظرية التشابه SSS:</span></strong><br>
+<span data-ar="الأضلاع الثلاثة متناسبة" data-en="Three sides proportional">الأضلاع الثلاثة متناسبة</span><br>
+<span class="math-display">AB/XY = BC/YZ = CA/ZX</span>
+</div>
+<div class="formula-box">
+<strong><span data-ar="نظرية التشابه SAS:" data-en="SAS Similarity Theorem:">نظرية التشابه SAS:</span></strong><br>
+<span data-ar="زاوية متطابقة + ضلعان محيطان متناسبان" data-en="Congruent angle + two including sides proportional">زاوية متطابقة + ضلعان محيطان متناسبان</span><br>
+<span class="math-display">∠A ≅ ∠X , AB/XY = AC/XZ</span>
+</div>
+</div>
+<div id="method-holder" class="mt-2"></div>
+</div>
+
+<main class="max-w-5xl mx-auto space-y-8" id="exam-content"></main>
+
+<div class="text-center no-print pb-8 mt-8">
+<button onclick="gradeExam()" class="bg-gradient-to-r from-blue-700 to-indigo-600 hover:from-blue-800 hover:to-indigo-700 text-white text-lg px-12 py-4 rounded-2xl font-bold shadow-xl transition transform hover:scale-105">🎯 <span data-ar="صحح إجاباتي!" data-en="Grade My Exam!">صحح إجاباتي!</span></button>
+</div>
+
+<div id="results-panel" class="max-w-5xl mx-auto mt-8 bg-white p-8 rounded-3xl shadow-2xl border-4 border-blue-500 hidden no-print">
+<h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">🏆 <span data-ar="نتيجتك يا بطل!" data-en="Your Result, Champion!">نتيجتك يا بطل!</span> 🏆</h2>
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+<div class="bg-blue-50 p-4 rounded-xl text-center"><p>😊 <span data-ar="الاسم" data-en="Name">الاسم</span></p><p id="res-name" class="font-bold text-xl text-blue-700">-</p></div>
+<div class="bg-indigo-50 p-4 rounded-xl text-center"><p>📅 <span data-ar="التاريخ" data-en="Date">التاريخ</span></p><p id="res-date" class="font-bold text-xl text-indigo-700">-</p></div>
+<div class="bg-blue-50 p-4 rounded-xl text-center"><p>🌟 <span data-ar="المجموع" data-en="Total">المجموع</span></p><p id="res-total" class="font-bold text-3xl text-blue-700">0 / 100</p></div>
+</div>
+<div class="text-center mb-6">
+<span id="success-badge" class="success-badge grade-excellent">-</span>
+<p id="success-percent" class="text-4xl font-bold text-blue-700 mt-2">0%</p>
+<p class="text-sm text-gray-500"><span data-ar="نسبة النجاح" data-en="Success Rate">نسبة النجاح</span></p>
+</div>
+<div class="bg-gray-50 p-6 rounded-xl mb-6">
+<h3 class="font-bold text-lg mb-4 text-gray-800">📊 <span data-ar="أداؤك في كل قسم:" data-en="Your Performance by Section:">أداؤك في كل قسم:</span></h3>
+<div class="space-y-3" id="sections-performance"></div>
+</div>
+<div class="text-center">
+<button id="sendEmailBtn" onclick="sendResultsToEmail()" class="bg-gradient-to-r from-blue-700 to-indigo-600 text-white text-lg px-8 py-3 rounded-2xl font-bold shadow-xl transition">📧 <span data-ar="أرسل النتيجة للمعلم" data-en="Send Result to Teacher">أرسل النتيجة للمعلم</span></button>
+<p id="emailStatus" class="text-sm mt-2 text-center font-medium"></p>
+</div>
+</div>
+
+<footer class="max-w-5xl mx-auto mt-10 mb-8 text-center text-gray-500 text-sm no-print">
+© Similar Triangles - Grade 11 General | Mr. Mohammed Hesham 🔺
+</footer>
+
+<script>
+const PUBLIC_KEY = "Rb3Lq8tXaFmc5YHUH";
+const SERVICE_ID = "service_w15m64i";
+const TEMPLATE_ID = "template_5b0u2tq";
+const TARGET_EMAIL = "mohammedhesham872@gmail.com";
+emailjs.init(PUBLIC_KEY);
+
+const STORAGE_KEY = 'similar_triangles_grade11_v1';
+const TOTAL_TIME = 2700;
+const TOTAL_QUESTIONS = 30;
+const TOTAL_SECTIONS = 6;
+const QUESTIONS_PER_SECTION = 5;
+
+let currentSeed = null, answersVisible = false, saveIndicatorTimeout = null;
+let currentLang = 'ar', timeRemaining = TOTAL_TIME, timerInterval;
+let examData, correctAnswersMap = {}, rng = null;
+
+function mulberry32(a){return function(){var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function showSaveIndicator(){const i=document.getElementById('saveIndicator');i.classList.add('show');if(saveIndicatorTimeout)clearTimeout(saveIndicatorTimeout);saveIndicatorTimeout=setTimeout(()=>i.classList.remove('show'),1500)}
+function saveState(s=true){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({seed:currentSeed,lang:currentLang,studentName:document.getElementById('studentName').value,studentClass:document.getElementById('studentClass').value,examDate:document.getElementById('examDate').value,answers:getSelectedAnswers(),timeRemaining:timeRemaining,answersVisible:answersVisible,savedAt:Date.now()}));if(s)showSaveIndicator()}catch(e){console.error(e)}}
+function loadState(){try{const s=localStorage.getItem(STORAGE_KEY);return s?JSON.parse(s):null}catch(e){return null}}
+function getSelectedAnswers(){const a={};for(let i=0;i<TOTAL_QUESTIONS;i++){const s=document.querySelector('input[name="q'+i+'"]:checked');if(s)a[i]=s.value}return a}
+function restoreAnswers(a){if(!a)return;for(const[i,v]of Object.entries(a)){const r=document.querySelector('input[name="q'+i+'"][value="'+v+'"]');if(r)r.checked=true}}
+function clearProgress(){if(confirm(currentLang==='ar'?'⚠️ هل أنت متأكد من مسح كل التقدم؟':'⚠️ Clear all progress?')){localStorage.removeItem(STORAGE_KEY);location.reload()}}
+function setupAnswerListeners(){document.getElementById('exam-content').addEventListener('change',e=>{if(e.target.type==='radio')saveState()})}
+function setupInputListeners(){['studentName','studentClass','examDate'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',()=>saveState(false));el.addEventListener('blur',()=>saveState())}})}
+
+// ==================== SVG DIAGRAMS ====================
+const svgGraphs = {
+concepts_panel: `<svg class="svg-graph" width="500" height="300" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="490" height="290" rx="12" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+<text x="250" y="26" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold">🔺 طرق التشابه الثلاث (ملخص المفاهيم ص 26)</text>
+<rect x="18" y="40" width="150" height="180" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+<text x="93" y="58" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="bold">مسلّمة AA</text>
+<polygon points="60,90 40,150 95,150" fill="none" stroke="#db2777" stroke-width="2"/>
+<path d="M 55 103 A 12 12 0 0 1 47 112" fill="none" stroke="#dc2626" stroke-width="2"/>
+<path d="M 52 150 A 10 10 0 0 0 62 143" fill="none" stroke="#dc2626" stroke-width="2"/>
+<polygon points="120,105 108,140 140,140" fill="none" stroke="#0891b2" stroke-width="2"/>
+<path d="M 117 113 A 9 9 0 0 1 111 119" fill="none" stroke="#dc2626" stroke-width="2"/>
+<path d="M 115 140 A 8 8 0 0 0 123 135" fill="none" stroke="#dc2626" stroke-width="2"/>
+<text x="93" y="168" text-anchor="middle" font-size="9" fill="#1e40af">زاويتان متطابقتان</text>
+<text x="93" y="184" text-anchor="middle" font-size="9" fill="#1e40af" font-family="'Amiri',serif">∠X ≅ ∠A , ∠Y ≅ ∠B</text>
+<text x="93" y="202" text-anchor="middle" font-size="9" fill="#166534" font-weight="bold">⇒ △ABC ~ △XYZ</text>
+<rect x="176" y="40" width="150" height="180" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+<text x="251" y="58" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="bold">نظرية SSS</text>
+<polygon points="218,90 198,150 253,150" fill="none" stroke="#db2777" stroke-width="2"/>
+<line x1="206" y1="118" x2="212" y2="122" stroke="#16a34a" stroke-width="2.5"/>
+<line x1="222" y1="150" x2="228" y2="150" stroke="#16a34a" stroke-width="2.5"/><line x1="224" y1="146" x2="226" y2="154" stroke="#16a34a" stroke-width="2.5"/>
+<polygon points="285,105 273,140 305,140" fill="none" stroke="#0891b2" stroke-width="2"/>
+<line x1="277" y1="120" x2="281" y2="123" stroke="#16a34a" stroke-width="2"/>
+<line x1="286" y1="140" x2="290" y2="140" stroke="#16a34a" stroke-width="2"/><line x1="288" y1="137" x2="289" y2="143" stroke="#16a34a" stroke-width="2"/>
+<text x="251" y="168" text-anchor="middle" font-size="9" fill="#1e40af">الأضلاع الثلاثة متناسبة</text>
+<text x="251" y="184" text-anchor="middle" font-size="9" fill="#1e40af" font-family="'Amiri',serif">AB/XY = BC/YZ = CA/ZX</text>
+<text x="251" y="202" text-anchor="middle" font-size="9" fill="#166534" font-weight="bold">⇒ △ABC ~ △XYZ</text>
+<rect x="334" y="40" width="150" height="180" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+<text x="409" y="58" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="bold">نظرية SAS</text>
+<polygon points="376,90 356,150 411,150" fill="none" stroke="#db2777" stroke-width="2"/>
+<path d="M 371 103 A 12 12 0 0 1 363 112" fill="none" stroke="#dc2626" stroke-width="2"/>
+<line x1="364" y1="118" x2="370" y2="122" stroke="#16a34a" stroke-width="2.5"/>
+<line x1="380" y1="150" x2="386" y2="150" stroke="#16a34a" stroke-width="2.5"/><line x1="382" y1="146" x2="384" y2="154" stroke="#16a34a" stroke-width="2.5"/>
+<polygon points="443,105 431,140 463,140" fill="none" stroke="#0891b2" stroke-width="2"/>
+<path d="M 440 113 A 9 9 0 0 1 434 119" fill="none" stroke="#dc2626" stroke-width="2"/>
+<text x="409" y="168" text-anchor="middle" font-size="9" fill="#1e40af">زاوية + ضلعان محيطان</text>
+<text x="409" y="184" text-anchor="middle" font-size="9" fill="#1e40af" font-family="'Amiri',serif">∠A ≅ ∠X , AB/XY = AC/XZ</text>
+<text x="409" y="202" text-anchor="middle" font-size="9" fill="#166534" font-weight="bold">⇒ △ABC ~ △XYZ</text>
+<rect x="18" y="232" width="466" height="52" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+<text x="250" y="252" text-anchor="middle" font-size="10.5" fill="#92400e" font-weight="bold">💡 AA مسلّمة (تُقبل بدون إثبات) أما SSS و SAS فنظريتان (تُثبتان)</text>
+<text x="250" y="270" text-anchor="middle" font-size="10" fill="#92400e">في SAS يجب أن تكون الزاوية المتطابقة بين الضلعين المتناسبين (زاوية محصورة)</text>
+</svg>`,
+
+aa_angles: `<svg class="svg-graph" width="480" height="260" viewBox="0 0 480 260" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="470" height="250" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+<text x="240" y="26" text-anchor="middle" font-size="13" fill="#9f1239" font-weight="bold">📐 الزاوية الثالثة المحسوبة (مثل السؤال 4)</text>
+<polygon points="80,60 40,160 150,160" fill="#fbcfe8" stroke="#ec4899" stroke-width="2.5"/>
+<text x="80" y="52" text-anchor="middle" font-size="10" fill="#9f1239" font-weight="bold">40°</text>
+<text x="52" y="176" text-anchor="middle" font-size="10" fill="#9f1239" font-weight="bold">60°</text>
+<text x="140" y="176" text-anchor="middle" font-size="10" fill="#166534" font-weight="bold">80° (محسوبة)</text>
+<text x="95" y="196" text-anchor="middle" font-size="9" fill="#9f1239">180 - 40 - 60 = 80</text>
+<polygon points="330,60 290,160 400,160" fill="#fdf2f8" stroke="#ec4899" stroke-width="2.5"/>
+<text x="330" y="52" text-anchor="middle" font-size="10" fill="#9f1239" font-weight="bold">60°</text>
+<text x="302" y="176" text-anchor="middle" font-size="10" fill="#9f1239" font-weight="bold">80°</text>
+<text x="390" y="176" text-anchor="middle" font-size="10" fill="#166534" font-weight="bold">40° (محسوبة)</text>
+<text x="345" y="196" text-anchor="middle" font-size="9" fill="#9f1239">180 - 60 - 80 = 40</text>
+<rect x="60" y="208" width="360" height="40" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+<text x="240" y="225" text-anchor="middle" font-size="11" fill="#166534" font-weight="bold">زاويتان متطابقتان (40° و 60°) ⇒ متشابهان بمسلّمة AA</text>
+<text x="240" y="241" text-anchor="middle" font-size="9" fill="#166534">مجموع زوايا المثلث = 180° دائماً</text>
+</svg>`,
+
+sss_sides: `<svg class="svg-graph" width="480" height="250" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="470" height="240" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+<text x="240" y="26" text-anchor="middle" font-size="13" fill="#065f46" font-weight="bold">📏 التحقق من SSS (مثل السؤال 5): 3,4,5 و 6,8,10</text>
+<polygon points="80,60 40,150 140,150" fill="#d1fae5" stroke="#10b981" stroke-width="2.5"/>
+<text x="50" y="105" font-size="10" fill="#065f46" font-weight="bold">3</text>
+<text x="85" y="165" font-size="10" fill="#065f46" font-weight="bold">4</text>
+<text x="118" y="105" font-size="10" fill="#065f46" font-weight="bold">5</text>
+<polygon points="330,45 250,165 410,165" fill="#ecfdf5" stroke="#10b981" stroke-width="2.5"/>
+<text x="278" y="105" font-size="10" fill="#065f46" font-weight="bold">6</text>
+<text x="325" y="180" font-size="10" fill="#065f46" font-weight="bold">8</text>
+<text x="378" y="105" font-size="10" fill="#065f46" font-weight="bold">10</text>
+<rect x="60" y="195" width="360" height="42" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+<text x="240" y="213" text-anchor="middle" font-size="11" fill="#92400e" font-family="'Amiri',serif" font-weight="bold">6/3 = 8/4 = 10/5 = 2</text>
+<text x="240" y="230" text-anchor="middle" font-size="10" fill="#166534" font-weight="bold">النسب متساوية ⇒ متشابهان بنظرية SSS ✓</text>
+</svg>`,
+
+sas_ok: `<svg class="svg-graph" width="480" height="240" viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="470" height="230" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+<text x="240" y="26" text-anchor="middle" font-size="13" fill="#92400e" font-weight="bold">✅ SAS صحيح: الزاوية بين الضلعين المتناسبين</text>
+<polygon points="110,60 60,160 180,160" fill="#fde68a" stroke="#f59e0b" stroke-width="2.5"/>
+<path d="M 103 74 A 15 15 0 0 1 93 84" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+<line x1="60" y1="160" x2="110" y2="60" stroke="#16a34a" stroke-width="4"/>
+<line x1="110" y1="60" x2="180" y2="160" stroke="#16a34a" stroke-width="4"/>
+<text x="70" y="105" font-size="10" fill="#166534" font-weight="bold">6</text>
+<text x="152" y="105" font-size="10" fill="#166534" font-weight="bold">8</text>
+<polygon points="350,75 315,145 400,145" fill="#fef3c7" stroke="#f59e0b" stroke-width="2.5"/>
+<path d="M 345 86 A 11 11 0 0 1 338 93" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+<line x1="315" y1="145" x2="350" y2="75" stroke="#16a34a" stroke-width="4"/>
+<line x1="350" y1="75" x2="400" y2="145" stroke="#16a34a" stroke-width="4"/>
+<text x="322" y="105" font-size="10" fill="#166534" font-weight="bold">3</text>
+<text x="382" y="105" font-size="10" fill="#166534" font-weight="bold">4</text>
+<rect x="60" y="180" width="360" height="42" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+<text x="240" y="198" text-anchor="middle" font-size="11" fill="#166534" font-weight="bold">الزاوية المتطابقة محصورة بين الضلعين: 6/3 = 8/4 = 2</text>
+<text x="240" y="214" text-anchor="middle" font-size="10" fill="#166534">⇒ تشابه بنظرية SAS ✓</text>
+</svg>`,
+
+sas_trap: `<svg class="svg-graph" width="480" height="240" viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="470" height="230" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+<text x="240" y="26" text-anchor="middle" font-size="13" fill="#991b1b" font-weight="bold">⚠️ فخ SAS: الزاوية ليست بين الضلعين!</text>
+<polygon points="120,60 60,160 190,160" fill="#fecaca" stroke="#dc2626" stroke-width="2.5"/>
+<path d="M 113 74 A 15 15 0 0 1 103 84" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+<text x="118" y="52" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="bold">∠A</text>
+<line x1="60" y1="160" x2="120" y2="60" stroke="#16a34a" stroke-width="4"/>
+<line x1="60" y1="160" x2="190" y2="160" stroke="#2563eb" stroke-width="4"/>
+<text x="75" y="105" font-size="10" fill="#166534" font-weight="bold">AB</text>
+<text x="120" y="176" font-size="10" fill="#1e40af" font-weight="bold">BC</text>
+<rect x="230" y="60" width="220" height="100" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+<text x="340" y="82" text-anchor="middle" font-size="10.5" fill="#92400e" font-weight="bold">المعطى: ∠A ≅ ∠X و AB/XY = BC/YZ</text>
+<text x="340" y="102" text-anchor="middle" font-size="10" fill="#92400e">لكن ∠A ليست محصورة بين AB و BC!</text>
+<text x="340" y="122" text-anchor="middle" font-size="10" fill="#92400e">(الزاوية المحصورة بين AB و AC)</text>
+<text x="340" y="146" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="bold">✗ لا تصلح SAS هنا</text>
+<rect x="60" y="180" width="360" height="42" rx="8" fill="#fecaca" stroke="#dc2626" stroke-width="2"/>
+<text x="240" y="198" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="bold">لا يمكن إثبات التشابه بهذه المعطيات alone</text>
+<text x="240" y="214" text-anchor="middle" font-size="10" fill="#991b1b">تذكّر: S = ضلع، A = زاوية محصورة، S = ضلع (بالترتيب!)</text>
+</svg>`,
+
+parallel_aa: `<svg class="svg-graph" width="480" height="260" viewBox="0 0 480 260" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="470" height="250" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+<text x="240" y="26" text-anchor="middle" font-size="13" fill="#5b21b6" font-weight="bold">🔀 الخطوط المتوازية + الزوايا المتقابلة ⇒ AA</text>
+<line x1="70" y1="70" x2="410" y2="70" stroke="#1d4ed8" stroke-width="3"/>
+<line x1="70" y1="190" x2="410" y2="190" stroke="#1d4ed8" stroke-width="3"/>
+<text x="420" y="74" font-size="10" fill="#1e40af" font-weight="bold">AB</text>
+<text x="420" y="194" font-size="10" fill="#1e40af" font-weight="bold">DC</text>
+<line x1="120" y1="70" x2="330" y2="190" stroke="#7c3aed" stroke-width="2"/>
+<line x1="330" y1="70" x2="120" y2="190" stroke="#7c3aed" stroke-width="2"/>
+<circle cx="225" cy="130" r="5" fill="#dc2626"/>
+<text x="235" y="125" font-size="10" fill="#dc2626" font-weight="bold">E</text>
+<path d="M 135 70 A 16 16 0 0 1 128 82" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+<path d="M 315 190 A 16 16 0 0 1 322 178" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+<path d="M 213 118 A 14 14 0 0 1 237 118" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+<path d="M 213 142 A 14 14 0 0 0 237 142" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+<text x="150" y="60" font-size="9" fill="#166534">زاويتان متبادلتان داخلياً</text>
+<text x="240" y="160" font-size="9" fill="#dc2626">متقابلتان بالرأس</text>
+<rect x="60" y="205" width="360" height="42" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+<text x="240" y="222" text-anchor="middle" font-size="11" fill="#166534" font-weight="bold">△ABE ~ △DCE بمسلّمة AA</text>
+<text x="240" y="238" text-anchor="middle" font-size="9" fill="#166534">(متبادلتان داخلياً متطابقتان + متقابلتان بالرأس متطابقتان)</text>
+</svg>`,
+
+decision_flow: `<svg class="svg-graph" width="500" height="280" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="490" height="270" rx="12" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+<text x="250" y="26" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold">🧭 مخطط القرار: أي معيار أستخدم؟</text>
+<rect x="180" y="40" width="140" height="36" rx="8" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="2"/>
+<text x="250" y="63" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="bold">ما المعطيات؟</text>
+<line x1="250" y1="76" x2="90" y2="105" stroke="#1d4ed8" stroke-width="1.5"/>
+<line x1="250" y1="76" x2="250" y2="105" stroke="#1d4ed8" stroke-width="1.5"/>
+<line x1="250" y1="76" x2="410" y2="105" stroke="#1d4ed8" stroke-width="1.5"/>
+<rect x="20" y="105" width="140" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+<text x="90" y="125" text-anchor="middle" font-size="10" fill="#166534" font-weight="bold">زوايا فقط</text>
+<text x="90" y="142" text-anchor="middle" font-size="10" fill="#166534">(زوجان متطابقان)</text>
+<text x="90" y="158" text-anchor="middle" font-size="11" fill="#166534" font-weight="bold">⇒ AA</text>
+<rect x="180" y="105" width="140" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+<text x="250" y="125" text-anchor="middle" font-size="10" fill="#166534" font-weight="bold">أضلاع فقط</text>
+<text x="250" y="142" text-anchor="middle" font-size="10" fill="#166534">(3 نسب متساوية)</text>
+<text x="250" y="158" text-anchor="middle" font-size="11" fill="#166534" font-weight="bold">⇒ SSS</text>
+<rect x="340" y="105" width="140" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+<text x="410" y="125" text-anchor="middle" font-size="10" fill="#166534" font-weight="bold">زاوية + ضلعان</text>
+<text x="410" y="142" text-anchor="middle" font-size="10" fill="#166534">(الزاوية محصورة؟)</text>
+<text x="410" y="158" text-anchor="middle" font-size="11" fill="#166534" font-weight="bold">نعم ⇒ SAS</text>
+<rect x="20" y="180" width="460" height="44" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+<text x="250" y="198" text-anchor="middle" font-size="10.5" fill="#991b1b" font-weight="bold">الزاوية غير محصورة بين الضلعين؟ ⇒ لا يمكن الإثبات (فخ شائع!)</text>
+<text x="250" y="215" text-anchor="middle" font-size="10" fill="#991b1b">نسب الأضلاع غير متساوية؟ ⇒ غير متشابهين</text>
+<rect x="20" y="234" width="460" height="34" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+<text x="250" y="256" text-anchor="middle" font-size="10.5" fill="#92400e" font-weight="bold">💡 احسب الزاوية الثالثة بـ 180° عند الحاجة (مثل السؤال 4)</text>
+</svg>`
+};
+
+// ==================== EXAM DATA ====================
+const originalExamData = {
+sections: [
+{ id:'s1', title:{ar:'🔹 القسم 1: تحديد المعيار (مثل 3-1، 3-2، 3-3) (Q1-Q5)',en:'🔹 Section 1: Identifying the Criterion (like 3-1..3-3) (Q1-Q5)'}, questions:[
+{ q:{ar:'<strong>السؤال 1 (مثل 3-1):</strong> إذا كانت زاويتان في مثلث تطابقان زاويتين في مثلث آخر، فبأي مسلّمة أو نظرية يكون المثلثان متشابهين؟',en:'<strong>Q1 (like 3-1):</strong> If two angles of one triangle are congruent to two angles of another, by which criterion are they similar?'},
+  svg: svgGraphs.concepts_panel,
+  options:[{ar:'نظرية التشابه SSS',en:'SSS Similarity Theorem'},{ar:'مسلّمة التشابه AA',en:'AA Similarity Postulate'},{ar:'نظرية التشابه SAS',en:'SAS Similarity Theorem'},{ar:'لا يمكن إثبات التشابه',en:'Cannot prove similarity'}],
+  correct:1, answer:{ar:'زاويتان متطابقتان مع زاويتين ⇒ الزاوية الثالثة متطابقة أيضاً ⇒ تشابه بمسلّمة AA',en:'Two congruent angle pairs ⇒ third also congruent ⇒ AA postulate'} },
+{ q:{ar:'<strong>السؤال 2 (مثل 3-2):</strong> في المثلثين ABC و XYZ، إذا كانت <span class="math-display">AB/XY = BC/YZ = CA/ZX</span> فما سبب التشابه؟',en:'<strong>Q2 (like 3-2):</strong> In △ABC and △XYZ, if <span class="math-display">AB/XY = BC/YZ = CA/ZX</span>, what is the reason?'},
+  options:[{ar:'مسلّمة التشابه AA',en:'AA Postulate'},{ar:'نظرية التشابه SAS',en:'SAS Theorem'},{ar:'لا يمكن إثبات التشابه',en:'Cannot prove'},{ar:'نظرية التشابه SSS',en:'SSS Theorem'}],
+  correct:3, answer:{ar:'الأضلاع الثلاثة المتناظرة متناسبة ⇒ نظرية SSS',en:'Three pairs of proportional sides ⇒ SSS theorem'} },
+{ q:{ar:'<strong>السؤال 3 (مثل 3-3):</strong> إذا كانت <span class="math-display">∠X ≅ ∠A</span> و <span class="math-display">AB/XY = AC/XZ</span> فما سبب تشابه المثلثين ABC و XYZ؟',en:'<strong>Q3 (like 3-3):</strong> If <span class="math-display">∠X ≅ ∠A</span> and <span class="math-display">AB/XY = AC/XZ</span>, why are △ABC and △XYZ similar?'},
+  options:[{ar:'نظرية التشابه SAS',en:'SAS Theorem'},{ar:'نظرية التشابه SSS',en:'SSS Theorem'},{ar:'مسلّمة التشابه AA',en:'AA Postulate'},{ar:'لا يمكن إثبات التشابه',en:'Cannot prove'}],
+  correct:0, answer:{ar:'زاوية متطابقة والضلعان المحيطان بها متناسبان ⇒ SAS',en:'Congruent angle with including sides proportional ⇒ SAS'} },
+{ q:{ar:'<strong>السؤال 4:</strong> أي مما يلي يُعدّ مسلّمة (Postulate) وليس نظرية؟',en:'<strong>Q4:</strong> Which of the following is a postulate (not a theorem)?'},
+  options:[{ar:'SSS',en:'SSS'},{ar:'AA',en:'AA'},{ar:'SAS',en:'SAS'},{ar:'لا شيء مما سبق',en:'None'}],
+  correct:1, answer:{ar:'AA مسلّمة تُقبل بدون إثبات، أما SSS و SAS فنظريتان تُثبتان',en:'AA is accepted as postulate; SSS and SAS are theorems'} },
+{ q:{ar:'<strong>السؤال 5:</strong> ما أقل عدد من أزواج الزوايا المتطابقة يكفي لمسلّمة AA؟',en:'<strong>Q5:</strong> Minimum number of congruent angle pairs needed for AA?'},
+  options:[{ar:'1',en:'1'},{ar:'2',en:'2'},{ar:'3',en:'3'},{ar:'4',en:'4'}],
+  correct:1, answer:{ar:'زوجان يكفيان؛ الثالثة تتطابق تلقائياً (مجموع الزوايا 180°)',en:'Two pairs suffice; third follows from angle sum 180°'} }
+]},
+{ id:'s2', title:{ar:'🔹 القسم 2: التشابه بالزوايا AA (مثل 3-4) (Q6-Q10)',en:'🔹 Section 2: AA Similarity from Angles (like 3-4) (Q6-Q10)'}, questions:[
+{ q:{ar:'<strong>السؤال 6 (مثل 3-4):</strong> مثلث قياسا زاويتين فيه 40° و 60°، ومثلث آخر قياسا زاويتين فيه 60° و 80°. ما العبارة الصحيحة؟',en:'<strong>Q6 (like 3-4):</strong> One triangle has angles 40° and 60°; another has 60° and 80°. Which statement is correct?'},
+  svg: svgGraphs.aa_angles,
+  options:[{ar:'غير متشابهين',en:'Not similar'},{ar:'متشابهان بحسب SAS',en:'Similar by SAS'},{ar:'متشابهان بحسب AA',en:'Similar by AA'},{ar:'متشابهان بحسب SSS',en:'Similar by SSS'}],
+  correct:2, answer:{ar:'الثالثة في الأول: 180-40-60=80، وفي الثاني: 180-60-80=40 ⇒ الزوايا {40,60,80} لكليهما ⇒ AA',en:'Third angles: 80° and 40° ⇒ both have {40,60,80} ⇒ AA'} },
+{ q:{ar:'<strong>السؤال 7:</strong> مثلث زواياه 30° و 70°، وآخر زواياه 35° و 70°. هل يتشابهان؟',en:'<strong>Q7:</strong> Triangle with 30°,70° and triangle with 35°,70°. Similar?'},
+  options:[{ar:'متشابهان بـ AA',en:'Similar by AA'},{ar:'متشابهان بـ SAS',en:'Similar by SAS'},{ar:'غير متشابهين',en:'Not similar'},{ar:'متطابقان',en:'Congruent'}],
+  correct:2, answer:{ar:'الثالثة: 80° مقابل 75° ⇒ مجموعات الزوايا {30,70,80} و {35,70,75} مختلفة ⇒ غير متشابهين',en:'Third angles 80° vs 75° ⇒ angle sets differ ⇒ not similar'} },
+{ q:{ar:'<strong>السؤال 8:</strong> مثلثان قائما الزاوية، في كل منهما زاوية حادة قياسها 35°. هل يتشابهان؟',en:'<strong>Q8:</strong> Two right triangles each with a 35° acute angle. Similar?'},
+  options:[{ar:'غير متشابهين',en:'Not similar'},{ar:'نعم بـ AA (قائمة + 35°)',en:'Yes by AA (right + 35°)'},{ar:'نعم بـ SSS',en:'Yes by SSS'},{ar:'لا يمكن التحديد',en:'Cannot determine'}],
+  correct:1, answer:{ar:'زاويتان قائمتان متطابقتان + زاويتا 35° متطابقتان ⇒ AA',en:'Right angles congruent + 35° angles congruent ⇒ AA'} },
+{ q:{ar:'<strong>السؤال 9:</strong> مثلث زواياه 45° و 45°، وآخر زواياه 45° و 90°. هل يتشابهان؟',en:'<strong>Q9:</strong> Triangle with 45°,45° and triangle with 45°,90°. Similar?'},
+  options:[{ar:'متشابهان بـ AA',en:'Similar by AA'},{ar:'غير متشابهين',en:'Not similar'},{ar:'متشابهان بـ SSS فقط',en:'Similar by SSS only'},{ar:'لا يمكن',en:'Cannot'}],
+  correct:0, answer:{ar:'الأول: {45,45,90} والثاني: {45,45,90} ⇒ متشابهان بـ AA',en:'Both have {45,45,90} ⇒ AA'} },
+{ q:{ar:'<strong>السؤال 10:</strong> أي مثلثين متساويي الأضلاع:',en:'<strong>Q10:</strong> Any two equilateral triangles are:'},
+  options:[{ar:'غير متشابهين',en:'Not similar'},{ar:'متشابهان (زوايا 60°)',en:'Similar (60° angles)'},{ar:'متشابهان فقط إذا تطابقت أضلاعهما',en:'Similar only if sides equal'},{ar:'لا يمكن الحكم',en:'Cannot judge'}],
+  correct:1, answer:{ar:'كل زوايا أي مثلث متساوي الأضلاع 60° ⇒ زاويتان متطابقتان ⇒ AA',en:'All angles 60° ⇒ two congruent pairs ⇒ AA'} }
+]},
+{ id:'s3', title:{ar:'🔹 القسم 3: التشابه بالأضلاع SSS (مثل 3-5) (Q11-Q15)',en:'🔹 Section 3: SSS Similarity from Sides (like 3-5) (Q11-Q15)'}, questions:[
+{ q:{ar:'<strong>السؤال 11 (مثل 3-5):</strong> أطوال أضلاع مثلث 3 و 4 و 5، وأطوال أضلاع مثلث آخر 6 و 8 و 10. ما العبارة الصحيحة؟',en:'<strong>Q11 (like 3-5):</strong> Triangle sides 3,4,5; another 6,8,10. Which statement is correct?'},
+  svg: svgGraphs.sss_sides,
+  options:[{ar:'متشابهان بحسب AA',en:'Similar by AA'},{ar:'متشابهان بحسب SSS',en:'Similar by SSS'},{ar:'غير متشابهين',en:'Not similar'},{ar:'متطابقان',en:'Congruent'}],
+  correct:1, answer:{ar:'6/3 = 8/4 = 10/5 = 2 ⇒ النسب متساوية ⇒ SSS',en:'6/3 = 8/4 = 10/5 = 2 ⇒ SSS'} },
+{ q:{ar:'<strong>السؤال 12:</strong> مثلث أضلاعه 2 و 3 و 4، وآخر أضلاعه 4 و 6 و 9. هل يتشابهان؟',en:'<strong>Q12:</strong> Triangle sides 2,3,4; another 4,6,9. Similar?'},
+  options:[{ar:'متشابهان بـ SSS',en:'Similar by SSS'},{ar:'متشابهان بـ AA',en:'Similar by AA'},{ar:'غير متشابهين',en:'Not similar'},{ar:'متطابقان',en:'Congruent'}],
+  correct:2, answer:{ar:'4/2 = 2 و 6/3 = 2 لكن 9/4 = 2.25 ≠ 2 ⇒ النسب غير متساوية ⇒ غير متشابهين',en:'9/4 = 2.25 ≠ 2 ⇒ ratios unequal ⇒ not similar'} },
+{ q:{ar:'<strong>السؤال 13:</strong> مثلث أضلاعه 5 و 12 و 13، وآخر أضلاعه 10 و 24 و 26. هل يتشابهان؟',en:'<strong>Q13:</strong> Triangle sides 5,12,13; another 10,24,26. Similar?'},
+  options:[{ar:'غير متشابهين',en:'Not similar'},{ar:'متشابهان بحسب SSS',en:'Similar by SSS'},{ar:'متشابهان بحسب SAS',en:'Similar by SAS'},{ar:'لا يمكن',en:'Cannot'}],
+  correct:1, answer:{ar:'10/5 = 24/12 = 26/13 = 2 ⇒ SSS',en:'All ratios = 2 ⇒ SSS'} },
+{ q:{ar:'<strong>السؤال 14:</strong> مثلثان متشابهان أضلاع الأول 6 و 8 و 10 وأضلاع الثاني 9 و 12 و 15. ما معامل المقياس (الأول:الثاني)؟',en:'<strong>Q14:</strong> Similar triangles with sides 6,8,10 and 9,12,15. Scale factor (first:second)?'},
+  options:[{ar:'<span class="math-display">3:2</span>',en:'<span class="math-display">3:2</span>'},{ar:'<span class="math-display">2:3</span>',en:'<span class="math-display">2:3</span>'},{ar:'<span class="math-display">1:2</span>',en:'<span class="math-display">1:2</span>'},{ar:'<span class="math-display">4:3</span>',en:'<span class="math-display">4:3</span>'}],
+  correct:1, answer:{ar:'6/9 = 8/12 = 10/15 = 2/3 ⇒ المعامل 2:3',en:'6/9 = 2/3 ⇒ scale 2:3'} },
+{ q:{ar:'<strong>السؤال 15:</strong> مثلث أضلاعه 4 و 5 و 6، وآخر أضلاعه 8 و 10 و 14. هل يتشابهان؟',en:'<strong>Q15:</strong> Triangle sides 4,5,6; another 8,10,14. Similar?'},
+  options:[{ar:'متشابهان',en:'Similar'},{ar:'غير متشابهين',en:'Not similar'},{ar:'متطابقان',en:'Congruent'},{ar:'لا يمكن',en:'Cannot'}],
+  correct:1, answer:{ar:'8/4 = 2 و 10/5 = 2 لكن 14/6 ≈ 2.33 ≠ 2 ⇒ غير متشابهين',en:'14/6 ≈ 2.33 ≠ 2 ⇒ not similar'} }
+]},
+{ id:'s4', title:{ar:'🔹 القسم 4: التشابه بـ SAS والفخوخ (Q16-Q20)',en:'🔹 Section 4: SAS Similarity & Traps (Q16-Q20)'}, questions:[
+{ q:{ar:'<strong>السؤال 16:</strong> في المثلثين ABC و XYZ: ∠A ≅ ∠X و AB = 6، AC = 8، XY = 3، XZ = 4. ما سبب التشابه؟',en:'<strong>Q16:</strong> In △ABC, △XYZ: ∠A ≅ ∠X, AB=6, AC=8, XY=3, XZ=4. Reason for similarity?'},
+  svg: svgGraphs.sas_ok,
+  options:[{ar:'SSS',en:'SSS'},{ar:'SAS',en:'SAS'},{ar:'AA',en:'AA'},{ar:'لا يمكن',en:'Cannot'}],
+  correct:1, answer:{ar:'الزاوية المتطابقة محصورة بين ضلعين نسبتهما 6/3 = 8/4 = 2 ⇒ SAS',en:'Included angle with sides ratio 2 ⇒ SAS'} },
+{ q:{ar:'<strong>السؤال 17:</strong> إذا كان ∠B ≅ ∠Y و <span class="math-display">AB/XY = BC/YZ</span> فهل يتشابه المثلثان؟ وبأي معيار؟',en:'<strong>Q17:</strong> If ∠B ≅ ∠Y and <span class="math-display">AB/XY = BC/YZ</span>, are the triangles similar? By which criterion?'},
+  options:[{ar:'AA',en:'AA'},{ar:'SAS',en:'SAS'},{ar:'SSS',en:'SSS'},{ar:'لا يتشابهان',en:'Not similar'}],
+  correct:1, answer:{ar:'∠B محصورة بين AB و BC، و∠Y محصورة بين XY و YZ ⇒ النسبتان المحيطان بالزاوية ⇒ SAS',en:'∠B is between AB & BC; ∠Y between XY & YZ ⇒ SAS'} },
+{ q:{ar:'<strong>السؤال 18:</strong> إذا كان ∠A ≅ ∠X و <span class="math-display">AB/XY = BC/YZ</span> فقط، فهل يكفي ذلك لإثبات التشابه؟',en:'<strong>Q18:</strong> If only ∠A ≅ ∠X and <span class="math-display">AB/XY = BC/YZ</span>, is that enough to prove similarity?'},
+  svg: svgGraphs.sas_trap,
+  options:[{ar:'نعم بـ SAS',en:'Yes by SAS'},{ar:'نعم بـ AA',en:'Yes by AA'},{ar:'نعم بـ SSS',en:'Yes by SSS'},{ar:'لا يمكن إثبات التشابه',en:'Cannot prove similarity'}],
+  correct:3, answer:{ar:'∠A ليست محصورة بين AB و BC (المحصورة بين AB و AC) ⇒ لا تنطبق SAS ولا يكفي المعطى',en:'∠A is not included between AB & BC ⇒ SAS fails; insufficient'} },
+{ q:{ar:'<strong>السؤال 19:</strong> مثلث فيه زاوية 50° بين ضلعين 4 و 6، وآخر فيه زاوية 50° بين ضلعين 6 و 8. هل يتشابهان؟',en:'<strong>Q19:</strong> Triangle with 50° between sides 4 and 6; another with 50° between 6 and 8. Similar?'},
+  options:[{ar:'متشابهان بـ SAS',en:'Similar by SAS'},{ar:'غير متشابهين لأن النسب غير متساوية',en:'Not similar: ratios unequal'},{ar:'متشابهان بـ AA',en:'Similar by AA'},{ar:'متطابقان',en:'Congruent'}],
+  correct:1, answer:{ar:'4/6 = 0.67 لكن 6/8 = 0.75 ⇒ النسب غير متساوية ⇒ غير متشابهين',en:'4/6 ≠ 6/8 ⇒ not similar'} },
+{ q:{ar:'<strong>السؤال 20:</strong> مثلث فيه زاوية 70° بين ضلعين 3 و 5، وآخر فيه زاوية 70° بين ضلعين 6 و 10. هل يتشابهان؟',en:'<strong>Q20:</strong> Triangle with 70° between 3 and 5; another with 70° between 6 and 10. Similar?'},
+  options:[{ar:'غير متشابهين',en:'Not similar'},{ar:'متشابهان بحسب SAS',en:'Similar by SAS'},{ar:'متشابهان بحسب SSS',en:'Similar by SSS'},{ar:'لا يمكن',en:'Cannot'}],
+  correct:1, answer:{ar:'3/6 = 5/10 = 1/2 والزاوية محصورة ⇒ SAS',en:'3/6 = 5/10 with included angle ⇒ SAS'} }
+]},
+{ id:'s5', title:{ar:'🔹 القسم 5: من الأشكال والمواقف (Q21-Q25)',en:'🔹 Section 5: From Figures & Situations (Q21-Q25)'}, questions:[
+{ q:{ar:'<strong>السؤال 21:</strong> في الشكل: AB ∥ DC، والقطعتان AD و BC تتقاطعان في E. لماذا △ABE ~ △DCE؟',en:'<strong>Q21:</strong> In the figure: AB ∥ DC, segments AD and BC intersect at E. Why △ABE ~ △DCE?'},
+  svg: svgGraphs.parallel_aa,
+  options:[{ar:'SSS',en:'SSS'},{ar:'AA',en:'AA'},{ar:'SAS',en:'SAS'},{ar:'لا يتشابهان',en:'Not similar'}],
+  correct:1, answer:{ar:'زوايا متبادلة داخلياً متطابقة (بسبب التوازي) + زوايا متقابلة بالرأس عند E ⇒ AA',en:'Alternate interior angles + vertical angles ⇒ AA'} },
+{ q:{ar:'<strong>السؤال 22:</strong> مثلثان يشتركان في زاوية، ولكل منهما زاوية قائمة. هل يتشابهان؟',en:'<strong>Q22:</strong> Two triangles share an angle and each has a right angle. Similar?'},
+  options:[{ar:'SSS',en:'SSS'},{ar:'AA',en:'AA'},{ar:'SAS',en:'SAS'},{ar:'لا يمكن',en:'Cannot'}],
+  correct:1, answer:{ar:'زاوية مشتركة متطابقة + زاويتان قائمتان متطابقتان ⇒ AA',en:'Shared angle + right angles ⇒ AA'} },
+{ q:{ar:'<strong>السؤال 23:</strong> لإثبات تشابه أي مثلثين متساويي الأضلاع، أي الطرق تصلح؟',en:'<strong>Q23:</strong> To prove any two equilateral triangles similar, which methods work?'},
+  options:[{ar:'AA فقط',en:'AA only'},{ar:'SSS فقط',en:'SSS only'},{ar:'SAS فقط',en:'SAS only'},{ar:'أيٌّ منها يصلح',en:'Any of them works'}],
+  correct:3, answer:{ar:'الزوايا كلها 60° (AA) والأضلاع كلها متناسبة (SSS) وزاوية بين ضلعين متناسبين (SAS) — جميعها تنطبق',en:'All angles 60° (AA), all sides proportional (SSS), included angle (SAS) — all apply'} },
+{ q:{ar:'<strong>السؤال 24:</strong> مثلثان متساويا الساقين زاوية الرأس في كل منهما 40°. هل يتشابهان؟',en:'<strong>Q24:</strong> Two isosceles triangles each with vertex angle 40°. Similar?'},
+  options:[{ar:'غير متشابهين',en:'Not similar'},{ar:'متشابهان بـ AA',en:'Similar by AA'},{ar:'متطابقان',en:'Congruent'},{ar:'لا يمكن',en:'Cannot'}],
+  correct:1, answer:{ar:'زاويتا القاعدة في كل منهما (180-40)/2 = 70° ⇒ زوايا متطابقة ⇒ AA',en:'Base angles = 70° each ⇒ AA'} },
+{ q:{ar:'<strong>السؤال 25:</strong> مثلث متساوي الساقين زاوية قاعدته 50°، وآخر متساوي الساقين زاوية قاعدته 60°. هل يتشابهان؟',en:'<strong>Q25:</strong> Isosceles triangle with base angle 50°; another with base angle 60°. Similar?'},
+  options:[{ar:'متشابهان',en:'Similar'},{ar:'غير متشابهين',en:'Not similar'},{ar:'متشابهان بـ SAS',en:'Similar by SAS'},{ar:'متطابقان',en:'Congruent'}],
+  correct:1, answer:{ar:'الأول زواياه {50,50,80} والثاني {60,60,60} ⇒ لا تطابق في الزوايا ⇒ غير متشابهين',en:'Angles {50,50,80} vs {60,60,60} ⇒ not similar'} }
+]},
+{ id:'s6', title:{ar:'🔹 القسم 6: إيجاد قيم مجهولة ومسائل مركبة (Q26-Q30)',en:'🔹 Section 6: Finding Unknowns & Mixed (Q26-Q30)'}, questions:[
+{ q:{ar:'<strong>السؤال 26:</strong> إذا كان △ABC ~ △DEF و ∠A = 50° و ∠B = 70° فما قياس ∠F؟',en:'<strong>Q26:</strong> If △ABC ~ △DEF with ∠A=50°, ∠B=70°, what is ∠F?'},
+  options:[{ar:'50°',en:'50°'},{ar:'60°',en:'60°'},{ar:'70°',en:'70°'},{ar:'120°',en:'120°'}],
+  correct:1, answer:{ar:'∠C = 180-50-70 = 60° و ∠F يقابل ∠C ⇒ ∠F = 60°',en:'∠C = 60°; ∠F corresponds to ∠C ⇒ 60°'} },
+{ q:{ar:'<strong>السؤال 27:</strong> ليكون △ABC ~ △XYZ بـ SAS عند ∠A ≅ ∠X: إذا كان AB = 4، AC = 6، XY = 10 فما XZ؟',en:'<strong>Q27:</strong> For SAS similarity with ∠A ≅ ∠X: AB=4, AC=6, XY=10. Find XZ.'},
+  options:[{ar:'12',en:'12'},{ar:'15',en:'15'},{ar:'10',en:'10'},{ar:'24',en:'24'}],
+  correct:1, answer:{ar:'4/10 = 6/XZ ⇒ 4·XZ = 60 ⇒ XZ = 15',en:'4/10 = 6/XZ ⇒ XZ = 15'} },
+{ q:{ar:'<strong>السؤال 28:</strong> مثلث أضلاعه 3 و 5 و 7 مشابه لمثلث أضلاعه 6 و 10 و x. ما قيمة x؟',en:'<strong>Q28:</strong> Triangle sides 3,5,7 similar to triangle sides 6,10,x. Find x.'},
+  options:[{ar:'12',en:'12'},{ar:'14',en:'14'},{ar:'13',en:'13'},{ar:'21',en:'21'}],
+  correct:1, answer:{ar:'المعامل 2 ⇒ x = 7 × 2 = 14',en:'Scale 2 ⇒ x = 14'} },
+{ q:{ar:'<strong>السؤال 29:</strong> ما معامل المقياس من المثلث (3، 4، 5) إلى المثلث (6، 8، 10)؟',en:'<strong>Q29:</strong> Scale factor from (3,4,5) triangle to (6,8,10) triangle?'},
+  options:[{ar:'2:1',en:'2:1'},{ar:'1:2',en:'1:2'},{ar:'1:4',en:'1:4'},{ar:'3:5',en:'3:5'}],
+  correct:1, answer:{ar:'من الأول إلى الثاني: 6/3 = 2 ⇒ لكن المطلوب "من (3,4,5) إلى (6,8,10)" = 1:2؟ انتبه: النسبة 3/6 = 1/2 ⇒ 1:2',en:'From first to second: 3/6 = 1:2'} },
+{ q:{ar:'<strong>السؤال 30:</strong> مثلثان متشابهان بمعامل مقياس 2:5. ما نسبة محيطيهما؟',en:'<strong>Q30:</strong> Similar triangles with scale 2:5. Perimeter ratio?'},
+  options:[{ar:'4:25',en:'4:25'},{ar:'2:5',en:'2:5'},{ar:'5:2',en:'5:2'},{ar:'25:4',en:'25:4'}],
+  correct:1, answer:{ar:'نسبة المحيطين تساوي معامل المقياس نفسه = 2:5 (أما المساحتان فـ 4:25)',en:'Perimeter ratio = scale factor = 2:5 (areas would be 4:25)'} }
+]}
+]};
+
+function shuffleArray(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r}
+function prepareShuffledExam(){rng=mulberry32(currentSeed);examData=JSON.parse(JSON.stringify(originalExamData));correctAnswersMap={};let g=0;examData.sections.forEach(s=>{s.questions=shuffleArray(s.questions);s.questions.forEach(q=>{const oc=q.options.map((o,i)=>({option:o,isCorrect:i===q.correct}));const sh=shuffleArray(oc);q.options=sh.map(o=>o.option);q.correct=sh.findIndex(o=>o.isCorrect);correctAnswersMap[g]=String.fromCharCode(97+q.correct);g++})})}
+function reshuffleExam(){if(confirm(currentLang==='ar'?'🔄 سيتم إنشاء أسئلة جديدة ومسح إجاباتك. هل أنت متأكد؟':'🔄 New questions will be generated. Are you sure?')){currentSeed=Date.now();timeRemaining=TOTAL_TIME;answersVisible=false;prepareShuffledExam();renderExam();saveState();alert(currentLang==='ar'?'🎲 تم تغيير الأسئلة! حظاً موفقاً! 🍀':'🎲 Questions changed! Good luck! 🍀');window.scrollTo({top:0,behavior:'smooth'})}}
+function setLanguage(lang){currentLang=lang;document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.getElementById('btn-ar').classList.toggle('active',lang==='ar');document.getElementById('btn-en').classList.toggle('active',lang==='en');document.body.classList.toggle('en-mode',lang==='en');document.querySelectorAll('[data-ar]').forEach(el=>{el.textContent=el.getAttribute('data-'+lang)});document.querySelectorAll('[data-placeholder-ar]').forEach(el=>{el.placeholder=el.getAttribute('data-placeholder-'+lang)});renderExam();saveState(false)}
+function renderExam(){const container=document.getElementById('exam-content');const lbl={option:['a)','b)','c)','d)'],answer:currentLang==='ar'?'✅ الإجابة:':'✅ Answer:'};let html='',g=0;
+examData.sections.forEach((section,si)=>{const bc=['module-1','module-2','module-3','module-4','module-5','module-6'][si];html+='<section class="bg-white p-6 rounded-2xl shadow-lg border-2 border-blue-100"><div class="text-center mb-4"><span class="module-badge '+bc+'">'+section.title[currentLang]+'</span></div><ol class="space-y-4 text-sm">';
+section.questions.forEach(q=>{html+='<li class="border-r-4 border-blue-400 pr-4 py-2" id="q-'+g+'" style="border-right:4px solid #1d4ed8;padding-right:1rem;"><strong class="text-blue-700">'+(g+1)+'.</strong> '+q.q[currentLang]+'<br>';
+if(q.svg)html+='<div class="graph-container">'+q.svg+'</div>';
+q.options.forEach((opt,oi)=>{html+='<label class="cursor-pointer block mt-2 mr-4 hover:bg-blue-50 rounded-lg p-2 transition" style="margin-right:1rem;"><input type="radio" name="q'+g+'" value="'+String.fromCharCode(97+oi)+'" class="mr-2 ml-2"><span class="arabic-math">'+lbl.option[oi]+' '+opt[currentLang]+'</span></label>'});
+html+='<div class="answer-box text-green-700 mt-3 font-medium '+(answersVisible?'':'hidden')+' bg-green-50 rounded-lg p-3 border border-green-200">'+lbl.answer+' '+lbl.option[q.correct]+' <span class="arabic-math">'+q.options[q.correct][currentLang]+'</span><br><span class="text-sm text-green-700 mt-2 block arabic-math">'+q.answer[currentLang]+'</span></div></li>';g++});
+html+='</ol></section>'});
+container.innerHTML=html}
+function startTimer(){updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining%60===0)saveState(false);if(timeRemaining<=600)document.getElementById('timer').classList.add('timer-warning');if(timeRemaining<=0){clearInterval(timerInterval);alert(currentLang==='ar'?'⏰ انتهى الوقت!':"⏰ Time's up!");gradeExam()}},1000)}
+function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60;document.getElementById('timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function toggleAnswers(){answersVisible=!answersVisible;document.querySelectorAll('.answer-box').forEach(el=>el.classList.toggle('hidden',!answersVisible));saveState(false)}
+function gradeExam(){let cc=0;const ss=new Array(TOTAL_SECTIONS).fill(0);
+for(let i=0;i<TOTAL_QUESTIONS;i++){const sel=document.querySelector('input[name="q'+i+'"]:checked');const li=document.getElementById('q-'+i);if(li){const ok=sel&&sel.value===correctAnswersMap[i];if(ok){cc++;li.classList.add('correct');li.classList.remove('incorrect');ss[Math.floor(i/QUESTIONS_PER_SECTION)]++}else{li.classList.add('incorrect');li.classList.remove('correct')}}}
+const score=Math.round(cc/TOTAL_QUESTIONS*100);document.getElementById('res-total').textContent=score+' / 100';document.getElementById('res-name').textContent=document.getElementById('studentName').value||(currentLang==='ar'?'بطل':'Champion');document.getElementById('res-date').textContent=new Date().toLocaleDateString(currentLang==='ar'?'ar-AE':'en-US');
+const pc=document.getElementById('sections-performance');pc.innerHTML='';examData.sections.forEach((s,i)=>{pc.innerHTML+='<div class="flex justify-between items-center p-3 bg-white rounded-lg"><span class="text-gray-700">'+s.title[currentLang]+'</span><span class="font-bold text-blue-700">'+ss[i]+'/'+QUESTIONS_PER_SECTION+'</span></div>'});
+const badge=document.getElementById('success-badge');document.getElementById('success-percent').textContent=score+'%';
+if(currentLang==='ar'){if(score>=90){badge.textContent='🌟 ممتاز جداً!';badge.className='success-badge grade-excellent'}else if(score>=75){badge.textContent='👏 ممتاز!';badge.className='success-badge grade-good'}else if(score>=50){badge.textContent='👍 جيد';badge.className='success-badge grade-pass'}else{badge.textContent='💪 حاول مرة أخرى';badge.className='success-badge grade-fail'}}
+else{if(score>=90){badge.textContent='🌟 Outstanding!';badge.className='success-badge grade-excellent'}else if(score>=75){badge.textContent='👏 Excellent!';badge.className='success-badge grade-good'}else if(score>=50){badge.textContent='👍 Good';badge.className='success-badge grade-pass'}else{badge.textContent='💪 Try Again';badge.className='success-badge grade-fail'}}
+document.getElementById('results-panel').classList.remove('hidden');document.getElementById('results-panel').scrollIntoView({behavior:'smooth'});if(timerInterval)clearInterval(timerInterval)}
+function sendResultsToEmail(){const btn=document.getElementById('sendEmailBtn'),status=document.getElementById('emailStatus');btn.disabled=true;btn.textContent=currentLang==='ar'?'⏳ جاري الإرسال...':'⏳ Sending...';
+const name=document.getElementById('studentName').value||'N/A',klass=document.getElementById('studentClass').value||'N/A',date=document.getElementById('examDate').value||new Date().toLocaleDateString(),score=document.getElementById('res-total').textContent,rate=document.getElementById('success-percent').textContent,badge=document.getElementById('success-badge').textContent;
+let qh='<div style="font-family:Arial;direction:rtl"><h2>🔺 '+(currentLang==='ar'?'نتيجة امتحان تشابه المثلثات - رياضيات 11 عام':'Similar Triangles Exam Result - Grade 11')+'</h2><p><b>الاسم:</b> '+name+'</p><p><b>الشعبة:</b> '+klass+'</p><p><b>التاريخ:</b> '+date+'</p><p><b>الدرجة:</b> '+score+' ('+rate+')</p><p><b>التقدير:</b> '+badge+'</p><hr><table style="width:100%;border-collapse:collapse"><tr style="background:#1d4ed8;color:white"><th style="padding:8px;border:1px solid #ddd">#</th><th style="padding:8px;border:1px solid #ddd">السؤال</th><th style="padding:8px;border:1px solid #ddd">إجابة الطالب</th><th style="padding:8px;border:1px solid #ddd">الصحيحة</th><th style="padding:8px;border:1px solid #ddd">النتيجة</th></tr>';
+let g=0;examData.sections.forEach(sec=>{qh+='<tr style="background:#dbeafe"><td colspan="5" style="padding:8px;font-weight:bold;border:1px solid #ddd">'+sec.title.ar+'</td></tr>';sec.questions.forEach(q=>{const sel=document.querySelector('input[name="q'+g+'"]:checked');const sv=sel?sel.value:null;const cv=correctAnswersMap[g];const ic=sv===cv;let sat=sv?q.options[sv.charCodeAt(0)-97][currentLang]:(currentLang==='ar'?'❌ لم يجب':'❌ No answer');const sac=ic?'#16a34a':'#dc2626';const cat=q.options[q.correct][currentLang];const rb=ic?'#f0fdf4':'#fef2f2';qh+='<tr style="background:'+rb+'"><td style="padding:8px;border:1px solid #ddd;text-align:center">'+(g+1)+'</td><td style="padding:8px;border:1px solid #ddd">'+q.q.ar.replace(/<[^>]+>/g,'').substring(0,70)+'...</td><td style="padding:8px;border:1px solid #ddd;color:'+sac+'">'+sat+'</td><td style="padding:8px;border:1px solid #ddd;color:#16a34a">'+cat+'</td><td style="padding:8px;border:1px solid #ddd;text-align:center">'+(ic?'✅':'❌')+'</td></tr>';g++})});
+qh+='</table></div>';
+emailjs.send(SERVICE_ID,TEMPLATE_ID,{to_email:TARGET_EMAIL,student_name:name,student_class:klass,exam_date:date,total_score:score,success_rate:rate,grade:badge,answers_table:qh})
+.then(()=>{status.textContent=currentLang==='ar'?'✅ تم الإرسال بنجاح!':'✅ Sent successfully!';status.style.color='#16a34a';btn.textContent=currentLang==='ar'?'✓ تم':'✓ Sent';alert(currentLang==='ar'?'تم إرسال النتيجة للمعلم بنجاح!':'Result sent to teacher successfully!')})
+.catch(err=>{status.textContent=currentLang==='ar'?'❌ فشل الإرسال':'❌ Failed';status.style.color='#dc2626';btn.disabled=false;btn.textContent=currentLang==='ar'?'📧 حاول مرة أخرى':'📧 Try Again'});}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const saved=loadState();
+  if(saved&&saved.seed){currentSeed=saved.seed;currentLang=saved.lang||'ar';timeRemaining=saved.timeRemaining!==undefined?saved.timeRemaining:TOTAL_TIME;answersVisible=saved.answersVisible||false}else{currentSeed=Date.now()}
+  document.getElementById('btn-ar').classList.toggle('active',currentLang==='ar');
+  document.getElementById('btn-en').classList.toggle('active',currentLang==='en');
+  document.body.classList.toggle('en-mode',currentLang==='en');
+  document.documentElement.lang=currentLang;document.documentElement.dir=currentLang==='ar'?'rtl':'ltr';
+  document.querySelectorAll('[data-ar]').forEach(el=>{el.textContent=el.getAttribute('data-'+currentLang)});
+  document.querySelectorAll('[data-placeholder-ar]').forEach(el=>{el.placeholder=el.getAttribute('data-placeholder-'+currentLang)});
+  prepareShuffledExam();renderExam();
+  if(saved){if(saved.studentName)document.getElementById('studentName').value=saved.studentName;if(saved.studentClass)document.getElementById('studentClass').value=saved.studentClass;if(saved.examDate)document.getElementById('examDate').value=saved.examDate;if(saved.answers)restoreAnswers(saved.answers)}
+  setupAnswerListeners();setupInputListeners();
+  document.getElementById('method-holder').innerHTML=svgGraphs.decision_flow;
+  startTimer();
+});
+window.addEventListener('beforeunload',()=>saveState(false));
+</script>
+</body>
+</html>
